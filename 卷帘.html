@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>地图卷帘效果</title>
     <link rel="stylesheet" href="./ol/ol.css" type="text/css">
@@ -8,8 +9,10 @@
         body {
             overflow: hidden;
         }
- 
-        html, body, .map {
+
+        html,
+        body,
+        .map {
             width: 100%;
             height: 100%;
             position: absolute;
@@ -17,28 +20,65 @@
             padding: 0;
             margin: 0;
         }
-        .swipe {
+ /*拖拽区div样式*/
+ .swipe  {
             position: absolute;
-            top: 15px;
-            left: 40px;
-            z-index: 9;
-            width: auto;
+            top: 50%;
+            z-index: 882128;
+            height: 0px; /*横条的高度*/
         }
- 
-            .swipe input[type=range] {
-                width: 300px;
-            }
+        /*修改滑块默认样式*/
+        input[type=range]{
+            margin-top: 8px;
+            outline: none;
+            -webkit-appearance: none;/*清除系统默认样式*/
+            width:99% !important;
+            background: -webkit-linear-gradient(#61bd12, #61bd12) no-repeat, #ddd;
+            background-size: 100% 100%;/*设置左右宽度比例*/
+            height: 0px;/*横条的高度*/
+        }
+        /*拖动块的样式*/
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;/*清除系统默认样式*/
+            height:32px;/*拖动块高度*/
+            width: 32px;/*拖动块宽度*/
+            background: #ffffff;/*拖动块背景*/
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABlBMVEV9fX3///+Kct39AAAAAnRSTlP/AOW3MEoAAAA9SURBVFjD7dehDQAwDANBZ/+l2wmKoiqR7pHRcaeaCxAIBAL/g7k9JxAIBAKBQCAQCAQC14H+MhAIBE4CD3fOFvGVBzhZAAAAAElFTkSuQmCC");
+            background-size: 100% 100%;
+            border-radius: 50%; /*外观设置为圆形*/
+            border: solid 1px #e1e1e1; /*设置边框*/
+            background-position: left;
+        }
+
     </style>
 </head>
+
 <body>
- 
-    <div class="swipe">
+
+    <!-- <div class="swipe">
         卷帘:<input type="range" min="0" max="100" step="1" id="swipe" value="8"><br />       
+    </div> -->
+    <!-- <div class="swipe" id="swipe2"> -->
+       
+        <!-- <div class="swipe-bar" id="swipeBar" :style="{
+            height: height + 'px',
+            top: myOffsetTop + 'px',
+            left: (width / 2) + myOffsetLeft + 'px'
+        }">
+            <div id="swipe" :style="{
+                left: (width / 2 - 32) + myOffsetLeft + 'px',
+                top: (height / 2 - 26) + myOffsetTop + 'px'
+            }"></div>
+        </div> -->
     </div>
-    <div id="map" class="map"></div>
+    <div id="map" class="map">
+        <input id="swipe" type="range" class="swipe"/>
+    </div>
     <script>
+        width = document.body.clientWidth;
+        height = document.body.clientHeight;
         function getTdtLayer(lyr) {
-            var url = "http://t{0-7}.tianditu.com/DataServer?T=" + lyr + "&X={x}&Y={y}&L={z}&tk=4f62e1d82bd46e2ff470b291c2260156";
+            var url = "http://t{0-7}.tianditu.com/DataServer?T=" + lyr + "&X={x}&Y={y}&L={z}&tk=4c27d6e0e8a90715b23a989d42272fd8";
             var layer = new ol.layer.Tile({
                 source: new ol.source.XYZ({
                     url: url
@@ -57,7 +97,7 @@
                 zoom: 7
             }),
             layers: [
-               img_c, vec_c,cva_c
+                img_c, vec_c, cva_c
             ]
         });
         var swipe = document.getElementById('swipe');
@@ -65,8 +105,7 @@
         vec_c.on('prerender', function (event) {
             var ctx = event.context;
             console.log(swipe.value);
-            var width = ctx.canvas.width * (swipe.value / 100);
- 
+            var width = ctx.canvas.width * (swipe.value / 101);
             ctx.save();
             ctx.beginPath();
             ctx.rect(width, 0, ctx.canvas.width - width, ctx.canvas.height);
@@ -77,9 +116,14 @@
             var ctx = event.context;
             ctx.restore();
         });
-        swipe.addEventListener('input', function () {
+        swipe.addEventListener('input', function () { 
             map.render();
         }, false);
+
+
+
+        
     </script>
 </body>
+
 </html>
